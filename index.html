@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<title>AI Bot Solutions | Deploy AI Brand Protection Bots</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Stripe -->
+<script src="https://js.stripe.com/v3/"></script>
+
+<!-- Ethers -->
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+
+<style>
+html { scroll-behavior: smooth; }
+</style>
+
+</head>
+
+<body class="bg-gray-950 text-white font-sans">
+
+<!-- NAVBAR -->
+<header class="fixed w-full bg-gray-950/90 backdrop-blur border-b border-gray-800 z-50">
+
+<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+<h1 class="text-xl font-bold text-blue-400">
+AI Bot Solutions
+</h1>
+
+<nav class="space-x-6 text-sm">
+<a href="#pricing" class="hover:text-blue-400">Pricing</a>
+<a href="#contact" class="hover:text-blue-400">Contact</a>
+</nav>
+
+</div>
+</header>
+
+<!-- HERO -->
+<section class="min-h-screen flex items-center justify-center text-center px-6">
+
+<div>
+
+<h2 class="text-5xl font-bold mb-6">
+Deploy AI Brand Protection Bots Instantly
+</h2>
+
+<p class="text-gray-400 mb-8 max-w-xl mx-auto">
+Automated bot deployment immediately after payment. Monitor infringement, impersonation, fraud, and brand abuse 24/7.
+</p>
+
+<a href="#pricing"
+class="bg-blue-500 hover:bg-blue-600 px-8 py-4 rounded-xl font-semibold">
+
+Deploy Now
+
+</a>
+
+</div>
+
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="py-20 px-6 bg-gray-900">
+
+<div class="max-w-7xl mx-auto text-center">
+
+<h3 class="text-3xl font-bold mb-12">
+Choose Deployment Plan
+</h3>
+
+<div class="grid md:grid-cols-3 gap-8">
+
+<!-- STARTER -->
+<div class="bg-gray-800 p-8 rounded-xl">
+
+<h4 class="text-xl mb-4">Starter Bot</h4>
+
+<p class="text-3xl mb-6">$500/month</p>
+
+<button onclick="startStripeCheckout('starter')"
+class="w-full bg-indigo-600 py-3 rounded mb-3">
+
+Pay with Stripe
+
+</button>
+
+<button onclick="payCrypto('starter', 0.01)"
+class="w-full bg-purple-600 py-3 rounded">
+
+Pay with Crypto
+
+</button>
+
+</div>
+
+<!-- PROFESSIONAL -->
+<div class="bg-blue-600 p-8 rounded-xl">
+
+<h4 class="text-xl mb-4">
+Professional Suite
+</h4>
+
+<p class="text-3xl mb-6">
+$2,000/month
+</p>
+
+<button onclick="startStripeCheckout('pro')"
+class="w-full bg-black py-3 rounded mb-3">
+
+Pay with Stripe
+
+</button>
+
+<button onclick="payCrypto('pro', 0.05)"
+class="w-full bg-purple-800 py-3 rounded">
+
+Pay with Crypto
+
+</button>
+
+</div>
+
+<!-- ENTERPRISE -->
+<div class="bg-gray-800 p-8 rounded-xl border border-yellow-500">
+
+<h4 class="text-xl text-yellow-400 mb-4">
+Enterprise Deployment
+</h4>
+
+<p class="text-3xl mb-6">
+Custom
+</p>
+
+<button onclick="startStripeCheckout('enterprise')"
+class="w-full bg-yellow-500 text-black py-3 rounded mb-3">
+
+Deploy Enterprise
+
+</button>
+
+<a href="#contact"
+class="block bg-gray-700 py-3 rounded">
+
+Contact Sales
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- CONTACT -->
+<section id="contact" class="py-20 px-6 text-center">
+
+<h3 class="text-3xl mb-6">
+Contact Sales
+</h3>
+
+<form class="max-w-xl mx-auto space-y-4">
+
+<input
+class="w-full p-3 bg-gray-800 rounded"
+placeholder="Name"
+required>
+
+<input
+class="w-full p-3 bg-gray-800 rounded"
+placeholder="Email"
+required>
+
+<textarea
+class="w-full p-3 bg-gray-800 rounded"
+placeholder="Describe your needs">
+</textarea>
+
+<button
+class="bg-blue-500 px-6 py-3 rounded w-full">
+
+Submit
+
+</button>
+
+</form>
+
+</section>
+
+<footer class="py-8 text-center text-gray-500">
+
+© 2026 AI Bot Solutions
+
+</footer>
+
+<!-- Stripe Logic -->
+<script>
+
+const stripe =
+Stripe("YOUR_STRIPE_PUBLISHABLE_KEY");
+
+async function startStripeCheckout(plan)
+{
+
+const res =
+await fetch("https://your-backend.com/create-checkout-session", {
+
+method: "POST",
+
+headers: {
+"Content-Type": "application/json"
+},
+
+body: JSON.stringify({
+plan: plan
+})
+
+});
+
+const session =
+await res.json();
+
+await stripe.redirectToCheckout({
+sessionId: session.id
+});
+
+}
+
+</script>
+
+<!-- Crypto Logic -->
+<script>
+
+async function payCrypto(plan, amount)
+{
+
+if (!window.ethereum)
+{
+alert("Install MetaMask");
+return;
+}
+
+const provider =
+new ethers.BrowserProvider(window.ethereum);
+
+await provider.send("eth_requestAccounts", []);
+
+const signer =
+await provider.getSigner();
+
+const tx =
+await signer.sendTransaction({
+
+to: "YOUR_WALLET_ADDRESS",
+
+value:
+ethers.parseEther(amount.toString())
+
+});
+
+await tx.wait();
+
+await fetch("https://your-backend.com/crypto-payment-success", {
+
+method: "POST",
+
+headers: {
+"Content-Type": "application/json"
+},
+
+body: JSON.stringify({
+
+plan: plan,
+
+wallet:
+await signer.getAddress(),
+
+txHash:
+tx.hash
+
+})
+
+});
+
+alert("Bot provisioning started");
+
+}
+
+</script>
+
+<!-- BotPenguin -->
+<script id="messenger-widget-b"
+src="https://cdn.botpenguin.com/website-bot.js"
+defer>
+699b8bb30f1ff6eef1e58995,699b8b8bd3c5f7f14274ccbb
+</script>
+
+</body>
+</html>
