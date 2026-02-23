@@ -1,304 +1,437 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-<title>AI Bot Solutions | Deploy AI Brand Protection Bots</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
-
-<!-- Stripe -->
-<script src="https://js.stripe.com/v3/"></script>
-
-<!-- Ethers -->
-<script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
-
-<style>
-html { scroll-behavior: smooth; }
-</style>
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Bot Development & Brand Protection Services</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Stripe -->
+  <script src="https://js.stripe.com/v3/"></script>
+  
+  <!-- Ethers -->
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+  
+  <style>
+    html { scroll-behavior: smooth; }
+  </style>
 </head>
 
 <body class="bg-gray-950 text-white font-sans">
 
-<!-- NAVBAR -->
-<header class="fixed w-full bg-gray-950/90 backdrop-blur border-b border-gray-800 z-50">
-
-<div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-
-<h1 class="text-xl font-bold text-blue-400">
-AI Bot Solutions
-</h1>
-
-<nav class="space-x-6 text-sm">
-<a href="#pricing" class="hover:text-blue-400">Pricing</a>
-<a href="#contact" class="hover:text-blue-400">Contact</a>
-</nav>
-
-</div>
-</header>
-
-<!-- HERO -->
-<section class="min-h-screen flex items-center justify-center text-center px-6">
-
-<div>
-
-<h2 class="text-5xl font-bold mb-6">
-Deploy AI Brand Protection Bots Instantly
-</h2>
-
-<p class="text-gray-400 mb-8 max-w-xl mx-auto">
-Automated bot deployment immediately after payment. Monitor infringement, impersonation, fraud, and brand abuse 24/7.
-</p>
-
-<a href="#pricing"
-class="bg-blue-500 hover:bg-blue-600 px-8 py-4 rounded-xl font-semibold">
-
-Deploy Now
-
-</a>
-
-</div>
-
-</section>
-
-<!-- PRICING -->
-<section id="pricing" class="py-20 px-6 bg-gray-900">
-
-<div class="max-w-7xl mx-auto text-center">
-
-<h3 class="text-3xl font-bold mb-12">
-Choose Deployment Plan
-</h3>
-
-<div class="grid md:grid-cols-3 gap-8">
-
-<!-- STARTER -->
-<div class="bg-gray-800 p-8 rounded-xl">
-
-<h4 class="text-xl mb-4">Starter Bot</h4>
-
-<p class="text-3xl mb-6">$500/month</p>
-
-<button onclick="startStripeCheckout('starter')"
-class="w-full bg-indigo-600 py-3 rounded mb-3">
-
-Pay with Stripe
-
-</button>
-
-<button onclick="payCrypto('starter', 0.01)"
-class="w-full bg-purple-600 py-3 rounded">
-
-Pay with Crypto
-
-</button>
-
-</div>
-
-<!-- PROFESSIONAL -->
-<div class="bg-blue-600 p-8 rounded-xl">
-
-<h4 class="text-xl mb-4">
-Professional Suite
-</h4>
-
-<p class="text-3xl mb-6">
-$2,000/month
-</p>
-
-<button onclick="startStripeCheckout('pro')"
-class="w-full bg-black py-3 rounded mb-3">
-
-Pay with Stripe
-
-</button>
-
-<button onclick="payCrypto('pro', 0.05)"
-class="w-full bg-purple-800 py-3 rounded">
-
-Pay with Crypto
-
-</button>
-
-</div>
-
-<!-- ENTERPRISE -->
-<div class="bg-gray-800 p-8 rounded-xl border border-yellow-500">
-
-<h4 class="text-xl text-yellow-400 mb-4">
-Enterprise Deployment
-</h4>
-
-<p class="text-3xl mb-6">
-Custom
-</p>
-
-<button onclick="startStripeCheckout('enterprise')"
-class="w-full bg-yellow-500 text-black py-3 rounded mb-3">
-
-Deploy Enterprise
-
-</button>
-
-<a href="#contact"
-class="block bg-gray-700 py-3 rounded">
-
-Contact Sales
-
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
-
-<!-- CONTACT -->
-<section id="contact" class="py-20 px-6 text-center">
-
-<h3 class="text-3xl mb-6">
-Contact Sales
-</h3>
-
-<form class="max-w-xl mx-auto space-y-4">
-
-<input
-class="w-full p-3 bg-gray-800 rounded"
-placeholder="Name"
-required>
-
-<input
-class="w-full p-3 bg-gray-800 rounded"
-placeholder="Email"
-required>
-
-<textarea
-class="w-full p-3 bg-gray-800 rounded"
-placeholder="Describe your needs">
-</textarea>
-
-<button
-class="bg-blue-500 px-6 py-3 rounded w-full">
-
-Submit
-
-</button>
-
-</form>
-
-</section>
-
-<footer class="py-8 text-center text-gray-500">
-
-© 2026 AI Bot Solutions
-
-</footer>
-
-<!-- Stripe Logic -->
-<script>
-
-const stripe =
-Stripe("YOUR_STRIPE_PUBLISHABLE_KEY");
-
-async function startStripeCheckout(plan)
-{
-
-const res =
-await fetch("https://your-backend.com/create-checkout-session", {
-
-method: "POST",
-
-headers: {
-"Content-Type": "application/json"
-},
-
-body: JSON.stringify({
-plan: plan
-})
-
-});
-
-const session =
-await res.json();
-
-await stripe.redirectToCheckout({
-sessionId: session.id
-});
-
-}
-
-</script>
-
-<!-- Crypto Logic -->
-<script>
-
-async function payCrypto(plan, amount)
-{
-
-if (!window.ethereum)
-{
-alert("Install MetaMask");
-return;
-}
-
-const provider =
-new ethers.BrowserProvider(window.ethereum);
-
-await provider.send("eth_requestAccounts", []);
-
-const signer =
-await provider.getSigner();
-
-const tx =
-await signer.sendTransaction({
-
-to: "YOUR_WALLET_ADDRESS",
-
-value:
-ethers.parseEther(amount.toString())
-
-});
-
-await tx.wait();
-
-await fetch("https://your-backend.com/crypto-payment-success", {
-
-method: "POST",
-
-headers: {
-"Content-Type": "application/json"
-},
-
-body: JSON.stringify({
-
-plan: plan,
-
-wallet:
-await signer.getAddress(),
-
-txHash:
-tx.hash
-
-})
-
-});
-
-alert("Bot provisioning started");
-
-}
-
-</script>
-
-<!-- BotPenguin -->
-<script id="messenger-widget-b"
-src="https://cdn.botpenguin.com/website-bot.js"
-defer>
-699b8bb30f1ff6eef1e58995,699b8b8bd3c5f7f14274ccbb
-</script>
+  <!-- NAVBAR -->
+  <header class="fixed w-full bg-gray-950/90 backdrop-blur border-b border-gray-800 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      <h1 class="text-xl font-bold text-blue-400">AI Bot Solutions</h1>
+      <nav class="space-x-6 text-sm">
+        <a href="#services" class="hover:text-blue-400">Services</a>
+        <a href="#bots" class="hover:text-blue-400">Bots</a>
+        <a href="#pricing" class="hover:text-blue-400">Pricing</a>
+        <a href="#contact" class="hover:text-blue-400">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="min-h-screen flex items-center justify-center text-center px-6 pt-20">
+    <div>
+      <h2 class="text-4xl md:text-6xl font-bold mb-6">
+        Custom AI Bots for Brand Protection, Lead Generation, and Intelligence
+      </h2>
+      <p class="text-gray-400 max-w-2xl mx-auto mb-8">
+        We design and deploy enterprise-grade AI bots that monitor the web, detect infringement, generate leads, and automate intelligence gathering for your business. Deploy instantly after payment with automated provisioning.
+      </p>
+      <a href="#pricing" class="bg-blue-500 hover:bg-blue-600 px-8 py-4 rounded-xl font-semibold inline-block">
+        Deploy Now
+      </a>
+    </div>
+  </section>
+
+  <!-- SERVICES -->
+  <section id="services" class="py-20 px-6 bg-gray-900">
+    <div class="max-w-7xl mx-auto">
+      <h3 class="text-3xl font-bold mb-12 text-center">Our Services</h3>
+
+      <div class="grid md:grid-cols-3 gap-8">
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="text-xl font-semibold mb-3">AI Bot Development</h4>
+          <p class="text-gray-400">Custom bots designed to monitor, detect, and automate business intelligence and protection tasks.</p>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="text-xl font-semibold mb-3">Brand Protection Automation</h4>
+          <p class="text-gray-400">Detect trademark infringement, impersonation, counterfeit listings, and unauthorized brand usage 24/7.</p>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="text-xl font-semibold mb-3">Lead Generation Automation</h4>
+          <p class="text-gray-400">AI bots identify and deliver qualified leads directly from web and social platforms.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTS -->
+  <section id="bots" class="py-20 px-6">
+    <div class="max-w-7xl mx-auto">
+      <h3 class="text-3xl font-bold mb-12 text-center">Available AI Bots</h3>
+
+      <div class="grid md:grid-cols-2 gap-8">
+
+        <div class="bg-gray-800 p-6 rounded-xl border border-red-500">
+          <h4 class="font-semibold text-lg mb-2 text-red-400">Social Media Impersonation Detection Bot</h4>
+          <p class="text-gray-400">Continuously scans Instagram, LinkedIn, TikTok, X (Twitter), Facebook, and YouTube to detect fake accounts impersonating your brand, executives, or company. Uses AI to identify username similarity, stolen profile images, and fraudulent activity.</p>
+          <ul class="text-gray-500 text-sm mt-3 space-y-1">
+            <li>• Detect fake profiles using your brand name</li>
+            <li>• Identify impersonating executives and employees</li>
+            <li>• Monitor social platforms 24/7</li>
+            <li>• Provide evidence and reporting for takedown</li>
+          </ul>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="font-semibold text-lg mb-2">Trademark Infringement Detection Bot</h4>
+          <p class="text-gray-400">Scans the internet and social media for unauthorized use of trademarks, logos, and brand names. Provides automated alerts and evidence for legal action.</p>
+          <ul class="text-gray-500 text-sm mt-3 space-y-1">
+            <li>• Monitor trademark usage globally</li>
+            <li>• Detect counterfeit products</li>
+            <li>• Generate takedown reports</li>
+            <li>• Real-time notifications</li>
+          </ul>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="font-semibold text-lg mb-2">Executive Impersonation Detection Bot</h4>
+          <p class="text-gray-400">Detects fake accounts and impersonation attempts targeting executives and brands across all major platforms.</p>
+          <ul class="text-gray-500 text-sm mt-3 space-y-1">
+            <li>• Monitor executive names and emails</li>
+            <li>• Detect phishing campaigns</li>
+            <li>• Alert security teams instantly</li>
+            <li>• Track impersonation attempts</li>
+          </ul>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="font-semibold text-lg mb-2">Lead Generation Intelligence Bot</h4>
+          <p class="text-gray-400">Automatically identifies high-value potential clients across the web, social media, and industry directories.</p>
+          <ul class="text-gray-500 text-sm mt-3 space-y-1">
+            <li>• Extract qualified leads automatically</li>
+            <li>• Validate contact information</li>
+            <li>• Categorize by industry and company size</li>
+            <li>• Direct CRM integration</li>
+          </ul>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="font-semibold text-lg mb-2">Real Estate Intelligence Bot</h4>
+          <p class="text-gray-400">Detects distressed properties, off-market opportunities, and listing theft across MLS and online platforms.</p>
+          <ul class="text-gray-500 text-sm mt-3 space-y-1">
+            <li>• Identify distressed properties</li>
+            <li>• Monitor off-market deals</li>
+            <li>• Detect listing manipulation</li>
+            <li>• Automated property alerts</li>
+          </ul>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="font-semibold text-lg mb-2">Competitor Monitoring Bot</h4>
+          <p class="text-gray-400">Tracks competitor pricing, products, marketing strategies, and strategic changes in real-time.</p>
+          <ul class="text-gray-500 text-sm mt-3 space-y-1">
+            <li>• Monitor competitor websites</li>
+            <li>• Track price changes</li>
+            <li>• Analyze marketing campaigns</li>
+            <li>• Strategic alert dashboard</li>
+          </ul>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="font-semibold text-lg mb-2">Fraud & Scam Detection Bot</h4>
+          <p class="text-gray-400">Identifies fraudulent websites, fake businesses, phishing attempts, and impersonation scams targeting your customers.</p>
+          <ul class="text-gray-500 text-sm mt-3 space-y-1">
+            <li>• Detect fraudulent websites</li>
+            <li>• Identify phishing campaigns</li>
+            <li>• Monitor for customer scams</li>
+            <li>• Automated fraud alerts</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE DEMO CHECKER -->
+  <section id="demo" class="py-20 px-6 bg-gray-900">
+    <div class="max-w-3xl mx-auto text-center">
+      <h3 class="text-3xl font-bold mb-6">Live Impersonation Detection Demo</h3>
+      <p class="text-gray-400 mb-8">Enter your brand name to simulate how our AI bot detects fake social media accounts and impersonators.</p>
+
+      <div class="bg-gray-800 p-8 rounded-xl border border-blue-500">
+        <input 
+          id="brandInput"
+          type="text" 
+          placeholder="Enter your brand or executive name (example: Tesla, John Smith)"
+          class="w-full p-4 rounded bg-gray-900 border border-gray-700 mb-4 text-white"
+        />
+
+        <button 
+          onclick="runDemo()"
+          class="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded font-semibold w-full mb-6">
+          Scan for Impersonation
+        </button>
+
+        <div id="demoResults" class="text-left hidden">
+          <h4 class="font-semibold text-red-400 mb-3">Detected Potential Impersonators:</h4>
+          <ul class="space-y-2 text-gray-300">
+            <li>⚠️ Fake LinkedIn profile using similar executive name</li>
+            <li>⚠️ Instagram account copying brand logo and identity</li>
+            <li>⚠️ X (Twitter) account impersonating official brand</li>
+            <li>⚠️ Facebook page pretending to represent company</li>
+            <li>⚠️ TikTok account with stolen profile image</li>
+          </ul>
+          <p class="text-green-400 mt-4 font-semibold">✓ Full monitoring and automated takedown available with deployment.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ADDITIONAL SERVICES -->
+  <section id="integrations" class="py-20 px-6">
+    <div class="max-w-7xl mx-auto">
+      <h3 class="text-3xl font-bold mb-12 text-center">Additional Services & Integrations</h3>
+
+      <div class="grid md:grid-cols-3 gap-8">
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="text-xl font-semibold mb-3">API Integrations</h4>
+          <p class="text-gray-400">Seamless integration with CRMs, ERPs, payment gateways, analytics tools, and internal systems. We connect AI bots directly to your existing tech stack.</p>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="text-xl font-semibold mb-3">Custom Web & SaaS Development</h4>
+          <p class="text-gray-400">Full-stack development of dashboards, client portals, admin panels, and SaaS platforms built around your AI automation workflows.</p>
+        </div>
+
+        <div class="bg-gray-800 p-6 rounded-xl">
+          <h4 class="text-xl font-semibold mb-3">AI Infrastructure & Deployment</h4>
+          <p class="text-gray-400">Cloud deployment, secure hosting, automation pipelines, database architecture, and scalable AI infrastructure for enterprise-grade performance.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section id="pricing" class="py-20 px-6 bg-gray-900">
+    <div class="max-w-7xl mx-auto text-center">
+      <h3 class="text-3xl font-bold mb-4">Pricing & Deployment Options</h3>
+      <p class="text-gray-400 mb-12">Deploy instantly using PayPal, Stripe, Crypto, or Custom Enterprise billing. Automated provisioning begins immediately after payment.</p>
+
+      <div class="grid md:grid-cols-3 gap-8">
+
+        <!-- STARTER -->
+        <div class="bg-gray-800 p-8 rounded-xl border border-gray-700">
+          <h4 class="text-xl font-semibold mb-4">Starter Protection Bot</h4>
+          <p class="text-3xl font-bold mb-2">$500/mo</p>
+          <ul class="text-gray-400 text-sm mb-6 space-y-2">
+            <li>• 1 Active AI Bot</li>
+            <li>• Social media monitoring</li>
+            <li>• Basic infringement detection</li>
+            <li>• Email alerts</li>
+            <li>• Monthly reporting</li>
+            <li>• 24/7 monitoring</li>
+          </ul>
+
+          <a href="https://www.paypal.com" target="_blank" class="block bg-blue-500 hover:bg-blue-600 py-3 rounded font-semibold mb-3">
+            Pay with PayPal
+          </a>
+
+          <button onclick="startStripeCheckout('starter')" class="w-full bg-indigo-600 hover:bg-indigo-700 py-3 rounded font-semibold mb-3">
+            Pay with Stripe
+          </button>
+
+          <button onclick="payCrypto('starter', 0.01)" class="w-full bg-purple-600 hover:bg-purple-700 py-3 rounded font-semibold">
+            Pay with Crypto
+          </button>
+        </div>
+
+        <!-- PROFESSIONAL -->
+        <div class="bg-blue-600 p-8 rounded-xl border border-blue-400">
+          <h4 class="text-xl font-semibold mb-4">Professional Intelligence Suite</h4>
+          <p class="text-3xl font-bold mb-2">$2,000/mo</p>
+          <ul class="text-white text-sm mb-6 space-y-2">
+            <li>• Up to 5 AI Bots</li>
+            <li>• Full brand protection monitoring</li>
+            <li>• Impersonation detection</li>
+            <li>• Lead intelligence tools</li>
+            <li>• Real-time alerts dashboard</li>
+            <li>• Priority support</li>
+          </ul>
+
+          <a href="https://www.paypal.com" target="_blank" class="block bg-white text-black hover:bg-gray-200 py-3 rounded font-semibold mb-3">
+            Pay with PayPal
+          </a>
+
+          <button onclick="startStripeCheckout('pro')" class="w-full bg-black hover:bg-gray-800 py-3 rounded font-semibold mb-3">
+            Pay with Stripe
+          </button>
+
+          <button onclick="payCrypto('pro', 0.05)" class="w-full bg-purple-800 hover:bg-purple-900 py-3 rounded font-semibold">
+            Pay with Crypto
+          </button>
+        </div>
+
+        <!-- ENTERPRISE -->
+        <div class="bg-gray-800 p-8 rounded-xl border border-yellow-500">
+          <h4 class="text-xl font-semibold mb-4 text-yellow-400">Enterprise AI Platform</h4>
+          <p class="text-3xl font-bold mb-2">Custom Pricing</p>
+          <p class="text-gray-400 mb-4">Starting at $5,000+ setup + $1,000–$10,000/mo</p>
+
+          <ul class="text-gray-400 text-sm mb-6 space-y-2">
+            <li>• Unlimited bots</li>
+            <li>• Custom AI deployment</li>
+            <li>• Dedicated infrastructure</li>
+            <li>• API integrations</li>
+            <li>• Private dashboard</li>
+            <li>• Full automation systems</li>
+          </ul>
+
+          <a href="#contact" class="block bg-yellow-500 text-black hover:bg-yellow-400 py-3 rounded font-semibold mb-3">
+            Request Enterprise Deployment
+          </a>
+
+          <button onclick="payCrypto('enterprise', 0.25)" class="w-full bg-purple-600 hover:bg-purple-700 py-3 rounded font-semibold">
+            Pay with Crypto
+          </button>
+        </div>
+
+      </div>
+
+      <!-- PAYMENT INFO -->
+      <div class="mt-12 text-gray-400 text-sm">
+        <p>💳 Supported payments: PayPal | Stripe | Crypto (ETH, USDT, BTC) | Wire Transfer</p>
+        <p class="mt-2">⚡ Instant deployment begins immediately after payment confirmation</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="py-20 px-6">
+    <div class="max-w-xl mx-auto text-center">
+      <h3 class="text-3xl font-bold mb-6">Contact Us</h3>
+      <p class="text-gray-400 mb-8">Have questions? Our team is ready to help you deploy the right AI bot solution.</p>
+
+      <form class="space-y-4">
+        <input type="text" placeholder="Full Name" class="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white placeholder-gray-500" required />
+        <input type="email" placeholder="Email Address" class="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white placeholder-gray-500" required />
+        <select class="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white" required>
+          <option value="">Select Bot/Service</option>
+          <option value="impersonation">Social Media Impersonation Detection</option>
+          <option value="trademark">Trademark Infringement Detection</option>
+          <option value="executive">Executive Impersonation Detection</option>
+          <option value="leads">Lead Generation Intelligence</option>
+          <option value="realestate">Real Estate Intelligence</option>
+          <option value="competitor">Competitor Monitoring</option>
+          <option value="fraud">Fraud & Scam Detection</option>
+          <option value="custom">Custom Bot Development</option>
+        </select>
+        <textarea placeholder="Describe your needs" class="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white placeholder-gray-500" rows="5"></textarea>
+        <button class="bg-blue-500 px-6 py-3 rounded font-semibold hover:bg-blue-600 w-full">
+          Submit Inquiry
+        </button>
+      </form>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="py-8 text-center text-gray-500 border-t border-gray-800">
+    <p>© 2026 AI Bot Solutions. All rights reserved.</p>
+    <p class="text-xs mt-2">Enterprise-Grade AI Bot Development & Deployment</p>
+  </footer>
+
+  <!-- Stripe Logic -->
+  <script>
+    const stripe = Stripe("YOUR_STRIPE_PUBLISHABLE_KEY");
+
+    async function startStripeCheckout(plan) {
+      const res = await fetch("https://your-backend.com/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          plan: plan
+        })
+      });
+
+      const session = await res.json();
+
+      await stripe.redirectToCheckout({
+        sessionId: session.id
+      });
+    }
+  </script>
+
+  <!-- Crypto Logic -->
+  <script>
+    async function payCrypto(plan, amount) {
+      if (!window.ethereum) {
+        alert("Please install MetaMask to pay with crypto");
+        return;
+      }
+
+      try {
+        const provider = new ethers.BrowserProvider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = await provider.getSigner();
+
+        const tx = await signer.sendTransaction({
+          to: "YOUR_WALLET_ADDRESS",
+          value: ethers.parseEther(amount.toString())
+        });
+
+        await tx.wait();
+
+        await fetch("https://your-backend.com/crypto-payment-success", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            plan: plan,
+            wallet: await signer.getAddress(),
+            txHash: tx.hash
+          })
+        });
+
+        alert("✓ Payment received! Bot provisioning started. Check your email for deployment details.");
+      } catch (error) {
+        console.error("Payment error:", error);
+        alert("Payment failed. Please try again.");
+      }
+    }
+  </script>
+
+  <!-- Demo Logic -->
+  <script>
+    function runDemo() {
+      const input = document.getElementById('brandInput').value;
+      const results = document.getElementById('demoResults');
+      if(input.trim() !== '') {
+        results.classList.remove('hidden');
+      } else {
+        alert("Please enter a brand name to scan");
+      }
+    }
+  </script>
+
+  <!-- BotPenguin Chat Widget -->
+  <script id="messenger-widget-b" src="https://cdn.botpenguin.com/website-bot.js" defer>
+    699b8bb30f1ff6eef1e58995,699b8b8bd3c5f7f14274ccbb
+  </script>
 
 </body>
 </html>
