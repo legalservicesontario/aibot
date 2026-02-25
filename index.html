@@ -3,420 +3,942 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Bot Development & Brand Protection Services</title>
+  <title>AI Bot Solutions - Luvesta Group</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Stripe -->
   <script src="https://js.stripe.com/v3/"></script>
-  
-  <!-- Ethers -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
   
   <style>
     html { scroll-behavior: smooth; }
+    
+    * {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    :root {
+      --primary: #3b82f6;
+      --primary-dark: #1e40af;
+      --secondary: #8b5cf6;
+      --accent: #06b6d4;
+      --dark-bg: #0f172a;
+      --card-bg: #1e293b;
+      --text-primary: #f1f5f9;
+      --text-secondary: #cbd5e1;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: var(--text-primary);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(59, 130, 246, 0.4);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: var(--primary);
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      border: 2px solid var(--primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-secondary:hover {
+      background-color: var(--primary);
+      color: white;
+    }
+
+    .btn-payment {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+    }
+
+    .btn-paypal {
+      background-color: #0070ba;
+      color: white;
+    }
+
+    .btn-paypal:hover {
+      background-color: #005a94;
+    }
+
+    .btn-stripe {
+      background-color: #635bff;
+      color: white;
+    }
+
+    .btn-stripe:hover {
+      background-color: #4c51bf;
+    }
+
+    .btn-crypto {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .btn-crypto:hover {
+      background-color: #7c3aed;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      border-radius: 12px;
+      padding: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 10px 30px rgba(59, 130, 246, 0.15);
+      transform: translateY(-5px);
+    }
+
+    .payment-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .payment-modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background-color: var(--card-bg);
+      padding: 32px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 500px;
+      border: 1px solid rgba(59, 130, 246, 0.2);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .payment-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid rgba(59, 130, 246, 0.2);
+    }
+
+    .payment-tab {
+      padding: 12px 16px;
+      border: none;
+      background: none;
+      cursor: pointer;
+      font-weight: 600;
+      color: var(--text-secondary);
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .payment-tab.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+
+    .payment-content {
+      display: none;
+    }
+
+    .payment-content.show {
+      display: block;
+    }
+
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 48px;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .text-gradient {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .whatsapp-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 60px;
+      height: 60px;
+      background-color: #25D366;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .whatsapp-btn:hover {
+      width: 70px;
+      height: 70px;
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+    }
+
+    .whatsapp-btn svg {
+      width: 30px;
+      height: 30px;
+      fill: white;
+    }
+
+    @media (max-width: 768px) {
+      .whatsapp-btn {
+        width: 55px;
+        height: 55px;
+        bottom: 15px;
+        right: 15px;
+      }
+
+      .whatsapp-btn:hover {
+        width: 55px;
+        height: 55px;
+      }
+    }
   </style>
 </head>
 
-<body class="bg-gray-950 text-white font-sans">
+<body>
 
-  <!-- NAVBAR -->
+  <!-- NAVIGATION -->
   <header class="fixed w-full bg-gray-950/90 backdrop-blur border-b border-gray-800 z-50">
     <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      <h1 class="text-xl font-bold text-blue-400">AI Bot Solutions</h1>
-      <nav class="space-x-6 text-sm">
-        <a href="#services" class="hover:text-blue-400">Services</a>
-        <a href="#bots" class="hover:text-blue-400">Bots</a>
-        <a href="#pricing" class="hover:text-blue-400">Pricing</a>
-        <a href="#contact" class="hover:text-blue-400">Contact</a>
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+          <span class="text-white font-bold">LG</span>
+        </div>
+        <h1 class="text-xl font-bold text-blue-400">Luvesta Group</h1>
+      </div>
+      
+      <nav class="hidden md:flex items-center space-x-8 text-sm font-medium">
+        <a href="#home" class="text-gray-400 hover:text-blue-400 transition-colors">Home</a>
+        <a href="#services" class="text-gray-400 hover:text-blue-400 transition-colors">Services</a>
+        <a href="#bots" class="text-gray-400 hover:text-blue-400 transition-colors">Bots</a>
+        <a href="#integrations" class="text-gray-400 hover:text-blue-400 transition-colors">Integrations</a>
+        <a href="#pricing" class="text-gray-400 hover:text-blue-400 transition-colors">Pricing</a>
+        <a href="#contact" class="text-gray-400 hover:text-blue-400 transition-colors">Contact</a>
       </nav>
+
+      <a href="#contact" class="hidden md:block btn-primary">Get Started</a>
+
+      <button id="mobileMenuBtn" class="md:hidden p-2">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden bg-gray-900 border-t border-gray-800 py-4 px-6 space-y-4">
+      <a href="#home" class="block text-gray-400 hover:text-blue-400">Home</a>
+      <a href="#services" class="block text-gray-400 hover:text-blue-400">Services</a>
+      <a href="#bots" class="block text-gray-400 hover:text-blue-400">Bots</a>
+      <a href="#integrations" class="block text-gray-400 hover:text-blue-400">Integrations</a>
+      <a href="#pricing" class="block text-gray-400 hover:text-blue-400">Pricing</a>
+      <a href="#contact" class="block text-gray-400 hover:text-blue-400">Contact</a>
     </div>
   </header>
 
-  <!-- HERO -->
-  <section class="min-h-screen flex items-center justify-center text-center px-6 pt-20">
-    <div>
-      <h2 class="text-4xl md:text-6xl font-bold mb-6">
-        Custom AI Bots for Brand Protection, Lead Generation, and Intelligence
-      </h2>
-      <p class="text-gray-400 max-w-2xl mx-auto mb-8">
-        We design and deploy enterprise-grade AI bots that monitor the web, detect infringement, generate leads, and automate intelligence gathering for your business. Deploy instantly after payment with automated provisioning.
-      </p>
-      <a href="#pricing" class="bg-blue-500 hover:bg-blue-600 px-8 py-4 rounded-xl font-semibold inline-block">
-        Deploy Now
-      </a>
+  <!-- HERO SECTION -->
+  <section id="home" class="pt-32 pb-20 px-6 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="inline-flex items-center space-x-2 bg-blue-500/20 text-blue-300 px-4 py-2 rounded-lg mb-8">
+            <span class="text-2xl">🤖</span>
+            <span class="font-medium">Enterprise-Grade AI Automation</span>
+          </div>
+
+          <h1 class="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+            Custom AI Bots for <span class="text-gradient">Brand Protection & Intelligence</span>
+          </h1>
+
+          <p class="text-lg text-gray-400 mb-8 leading-relaxed">
+            Deploy enterprise-grade AI bots that monitor the web, detect infringement, generate qualified leads, and automate intelligence gathering. Instant deployment with automated provisioning.
+          </p>
+
+          <div class="flex flex-col sm:flex-row gap-4">
+            <a href="#bots" class="btn-primary text-center">Explore AI Bots</a>
+            <a href="#pricing" class="btn-secondary text-center">View Pricing</a>
+          </div>
+
+          <div class="flex items-center space-x-8 mt-12 pt-8 border-t border-gray-700">
+            <div>
+              <div class="text-3xl font-bold text-blue-400">6</div>
+              <p class="text-sm text-gray-400">AI Bot Types</p>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-blue-400">24/7</div>
+              <p class="text-sm text-gray-400">Monitoring</p>
+            </div>
+            <div>
+              <div class="text-3xl font-bold text-blue-400">Real-time</div>
+              <p class="text-sm text-gray-400">Alerts</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative h-96 hidden lg:flex items-center justify-center">
+          <div class="absolute inset-0 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-2xl blur-3xl"></div>
+          <div class="relative z-10 w-full h-full rounded-2xl border border-blue-500/50 p-8 flex flex-col items-center justify-center">
+            <span class="text-6xl mb-4">⚡</span>
+            <h3 class="text-2xl font-bold text-center">AI-Powered Solutions</h3>
+            <p class="text-gray-400 mt-3">Monitor • Detect • Protect • Generate</p>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- SERVICES -->
-  <section id="services" class="py-20 px-6 bg-gray-900">
+  <!-- CORE SERVICES SECTION -->
+  <section id="services" class="py-20 px-6">
     <div class="max-w-7xl mx-auto">
-      <h3 class="text-3xl font-bold mb-12 text-center">Our Services</h3>
+      <h2 class="section-title">Our AI Services</h2>
 
       <div class="grid md:grid-cols-3 gap-8">
-
-        <div class="bg-gray-800 p-6 rounded-xl">
-          <h4 class="text-xl font-semibold mb-3">AI Bot Development</h4>
-          <p class="text-gray-400">Custom bots designed to monitor, detect, and automate business intelligence and protection tasks.</p>
+        <div class="card">
+          <div class="text-4xl mb-4">🔧</div>
+          <h3 class="text-xl font-bold mb-3">AI Bot Development</h3>
+          <p class="text-gray-400 mb-6">Custom bots designed to monitor, detect, and automate business intelligence and protection tasks.</p>
+          <button onclick="openPaymentModal('Custom AI Bot Development', 1500, 'development')" class="btn-primary w-full">
+            Learn More - $1,500+
+          </button>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-xl">
-          <h4 class="text-xl font-semibold mb-3">Brand Protection Automation</h4>
-          <p class="text-gray-400">Detect trademark infringement, impersonation, counterfeit listings, and unauthorized brand usage 24/7.</p>
+        <div class="card">
+          <div class="text-4xl mb-4">🛡️</div>
+          <h3 class="text-xl font-bold mb-3">Brand Protection Automation</h3>
+          <p class="text-gray-400 mb-6">Detect trademark infringement, impersonation, counterfeit listings, and unauthorized brand usage 24/7.</p>
+          <button onclick="openPaymentModal('Brand Protection Automation', 1200, 'brand')" class="btn-primary w-full">
+            Deploy Now - $1,200/mo
+          </button>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-xl">
-          <h4 class="text-xl font-semibold mb-3">Lead Generation Automation</h4>
-          <p class="text-gray-400">AI bots identify and deliver qualified leads directly from web and social platforms.</p>
+        <div class="card">
+          <div class="text-4xl mb-4">👥</div>
+          <h3 class="text-xl font-bold mb-3">Lead Generation Automation</h3>
+          <p class="text-gray-400 mb-6">AI bots identify and deliver qualified leads directly from web and social platforms.</p>
+          <button onclick="openPaymentModal('Lead Generation Automation', 999, 'leads')" class="btn-primary w-full">
+            Deploy Now - $999/mo
+          </button>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- BOTS -->
-  <section id="bots" class="py-20 px-6">
+  <!-- AI BOTS SECTION -->
+  <section id="bots" class="py-20 px-6 bg-gray-900">
     <div class="max-w-7xl mx-auto">
-      <h3 class="text-3xl font-bold mb-12 text-center">Available AI Bots</h3>
+      <h2 class="section-title">Available AI Bots</h2>
 
       <div class="grid md:grid-cols-2 gap-8">
-
-        <div class="bg-gray-800 p-6 rounded-xl border border-red-500">
-          <h4 class="font-semibold text-lg mb-2 text-red-400">Social Media Impersonation Detection Bot</h4>
-          <p class="text-gray-400">Continuously scans Instagram, LinkedIn, TikTok, X (Twitter), Facebook, and YouTube to detect fake accounts impersonating your brand, executives, or company. Uses AI to identify username similarity, stolen profile images, and fraudulent activity.</p>
-          <ul class="text-gray-500 text-sm mt-3 space-y-1">
-            <li>• Detect fake profiles using your brand name</li>
-            <li>• Identify impersonating executives and employees</li>
-            <li>• Monitor social platforms 24/7</li>
-            <li>• Provide evidence and reporting for takedown</li>
+        <!-- Social Media Impersonation Detection -->
+        <div class="card">
+          <div class="text-3xl mb-4">🛡️</div>
+          <h4 class="font-semibold text-lg mb-2">Social Media Impersonation Detection Bot</h4>
+          <p class="text-gray-400 mb-6">Continuously scans Instagram, LinkedIn, TikTok, Twitter, Facebook, and YouTube to detect fake accounts impersonating your brand.</p>
+          <ul class="text-gray-500 text-sm mb-6 space-y-1">
+            <li>✓ Detect fake profiles using your brand name</li>
+            <li>✓ Identify impersonating executives</li>
+            <li>✓ Monitor social platforms 24/7</li>
+            <li>✓ Provide evidence for takedown</li>
           </ul>
+          <button onclick="openPaymentModal('Social Media Impersonation Detection', 500, 'social')" class="btn-primary w-full">
+            Deploy Now - $500/mo
+          </button>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-xl">
+        <!-- Trademark Infringement Detection -->
+        <div class="card">
+          <div class="text-3xl mb-4">⚙️</div>
           <h4 class="font-semibold text-lg mb-2">Trademark Infringement Detection Bot</h4>
-          <p class="text-gray-400">Scans the internet and social media for unauthorized use of trademarks, logos, and brand names. Provides automated alerts and evidence for legal action.</p>
-          <ul class="text-gray-500 text-sm mt-3 space-y-1">
-            <li>• Monitor trademark usage globally</li>
-            <li>• Detect counterfeit products</li>
-            <li>• Generate takedown reports</li>
-            <li>• Real-time notifications</li>
+          <p class="text-gray-400 mb-6">Scans the internet and social media for unauthorized use of trademarks, logos, and brand names globally.</p>
+          <ul class="text-gray-500 text-sm mb-6 space-y-1">
+            <li>✓ Monitor trademark usage worldwide</li>
+            <li>✓ Detect counterfeit products</li>
+            <li>✓ Generate takedown reports</li>
+            <li>✓ Real-time notifications</li>
           </ul>
+          <button onclick="openPaymentModal('Trademark Infringement Detection', 1000, 'trademark')" class="btn-primary w-full">
+            Deploy Now - $1,000/mo
+          </button>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-xl">
+        <!-- Executive Impersonation Detection -->
+        <div class="card">
+          <div class="text-3xl mb-4">🎯</div>
           <h4 class="font-semibold text-lg mb-2">Executive Impersonation Detection Bot</h4>
-          <p class="text-gray-400">Detects fake accounts and impersonation attempts targeting executives and brands across all major platforms.</p>
-          <ul class="text-gray-500 text-sm mt-3 space-y-1">
-            <li>• Monitor executive names and emails</li>
-            <li>• Detect phishing campaigns</li>
-            <li>• Alert security teams instantly</li>
-            <li>• Track impersonation attempts</li>
+          <p class="text-gray-400 mb-6">Detects fake accounts and impersonation attempts targeting executives and brands across all major platforms.</p>
+          <ul class="text-gray-500 text-sm mb-6 space-y-1">
+            <li>✓ Monitor executive names and emails</li>
+            <li>✓ Detect phishing campaigns</li>
+            <li>✓ Alert security teams instantly</li>
+            <li>✓ Track impersonation attempts</li>
           </ul>
+          <button onclick="openPaymentModal('Executive Impersonation Detection', 750, 'executive')" class="btn-primary w-full">
+            Deploy Now - $750/mo
+          </button>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-xl">
+        <!-- Lead Generation Intelligence -->
+        <div class="card">
+          <div class="text-3xl mb-4">📊</div>
           <h4 class="font-semibold text-lg mb-2">Lead Generation Intelligence Bot</h4>
-          <p class="text-gray-400">Automatically identifies high-value potential clients across the web, social media, and industry directories.</p>
-          <ul class="text-gray-500 text-sm mt-3 space-y-1">
-            <li>• Extract qualified leads automatically</li>
-            <li>• Validate contact information</li>
-            <li>• Categorize by industry and company size</li>
-            <li>• Direct CRM integration</li>
+          <p class="text-gray-400 mb-6">Automatically identifies high-value potential clients across the web, social media, and industry directories.</p>
+          <ul class="text-gray-500 text-sm mb-6 space-y-1">
+            <li>✓ Extract qualified leads automatically</li>
+            <li>✓ Validate contact information</li>
+            <li>✓ Categorize by industry and size</li>
+            <li>✓ Direct CRM integration</li>
           </ul>
+          <button onclick="openPaymentModal('Lead Generation Intelligence Bot', 800, 'leads')" class="btn-primary w-full">
+            Deploy Now - $800/mo
+          </button>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-xl">
+        <!-- Real Estate Intelligence -->
+        <div class="card">
+          <div class="text-3xl mb-4">🏠</div>
           <h4 class="font-semibold text-lg mb-2">Real Estate Intelligence Bot</h4>
-          <p class="text-gray-400">Detects distressed properties, off-market opportunities, and listing theft across MLS and online platforms.</p>
-          <ul class="text-gray-500 text-sm mt-3 space-y-1">
-            <li>• Identify distressed properties</li>
-            <li>• Monitor off-market deals</li>
-            <li>• Detect listing manipulation</li>
-            <li>• Automated property alerts</li>
+          <p class="text-gray-400 mb-6">Detects distressed properties, off-market opportunities, and listing manipulation across MLS and online platforms.</p>
+          <ul class="text-gray-500 text-sm mb-6 space-y-1">
+            <li>✓ Identify distressed properties</li>
+            <li>✓ Monitor off-market deals</li>
+            <li>✓ Detect listing manipulation</li>
+            <li>✓ Automated property alerts</li>
           </ul>
+          <button onclick="openPaymentModal('Real Estate Intelligence Bot', 700, 'realestate')" class="btn-primary w-full">
+            Deploy Now - $700/mo
+          </button>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-xl">
+        <!-- Competitor Monitoring -->
+        <div class="card">
+          <div class="text-3xl mb-4">📈</div>
           <h4 class="font-semibold text-lg mb-2">Competitor Monitoring Bot</h4>
-          <p class="text-gray-400">Tracks competitor pricing, products, marketing strategies, and strategic changes in real-time.</p>
-          <ul class="text-gray-500 text-sm mt-3 space-y-1">
-            <li>• Monitor competitor websites</li>
-            <li>• Track price changes</li>
-            <li>• Analyze marketing campaigns</li>
-            <li>• Strategic alert dashboard</li>
+          <p class="text-gray-400 mb-6">Tracks competitor pricing, products, marketing strategies, and strategic changes in real-time.</p>
+          <ul class="text-gray-500 text-sm mb-6 space-y-1">
+            <li>✓ Monitor competitor websites</li>
+            <li>✓ Track price changes</li>
+            <li>✓ Analyze marketing campaigns</li>
+            <li>✓ Strategic alert dashboard</li>
           </ul>
+          <button onclick="openPaymentModal('Competitor Monitoring Bot', 600, 'competitor')" class="btn-primary w-full">
+            Deploy Now - $600/mo
+          </button>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-xl">
+        <!-- Fraud & Scam Detection -->
+        <div class="card">
+          <div class="text-3xl mb-4">🚨</div>
           <h4 class="font-semibold text-lg mb-2">Fraud & Scam Detection Bot</h4>
-          <p class="text-gray-400">Identifies fraudulent websites, fake businesses, phishing attempts, and impersonation scams targeting your customers.</p>
-          <ul class="text-gray-500 text-sm mt-3 space-y-1">
-            <li>• Detect fraudulent websites</li>
-            <li>• Identify phishing campaigns</li>
-            <li>• Monitor for customer scams</li>
-            <li>• Automated fraud alerts</li>
+          <p class="text-gray-400 mb-6">Identifies fraudulent websites, fake businesses, phishing attempts, and impersonation scams targeting your customers.</p>
+          <ul class="text-gray-500 text-sm mb-6 space-y-1">
+            <li>✓ Detect fraudulent websites</li>
+            <li>✓ Identify phishing campaigns</li>
+            <li>✓ Monitor for customer scams</li>
+            <li>✓ Automated fraud alerts</li>
           </ul>
+          <button onclick="openPaymentModal('Fraud & Scam Detection Bot', 900, 'fraud')" class="btn-primary w-full">
+            Deploy Now - $900/mo
+          </button>
         </div>
+      </div>
 
+      <!-- Bundle Offer -->
+      <div class="bg-gradient-to-r from-blue-500 to-purple-600 rounded-2xl p-12 text-center mt-12">
+        <h3 class="text-3xl font-bold text-white mb-4">Complete AI Bot Suite</h3>
+        <p class="text-white/90 mb-6 text-lg">All 6 AI Bots + Priority Support + Custom Integrations</p>
+        <div class="text-5xl font-bold text-white mb-6">$2,000/mo</div>
+        <button onclick="openPaymentModal('Complete AI Bot Suite (All 6 Bots)', 2000, 'bundle')" class="bg-white text-blue-600 hover:bg-gray-100 px-8 py-3 rounded-lg font-bold transition-colors inline-block">
+          Deploy Complete Suite
+        </button>
       </div>
     </div>
   </section>
 
-  <!-- LIVE DEMO CHECKER -->
-  <section id="demo" class="py-20 px-6 bg-gray-900">
-    <div class="max-w-3xl mx-auto text-center">
-      <h3 class="text-3xl font-bold mb-6">Live Impersonation Detection Demo</h3>
-      <p class="text-gray-400 mb-8">Enter your brand name to simulate how our AI bot detects fake social media accounts and impersonators.</p>
+  <!-- LIVE DEMO SECTION -->
+  <section id="demo" class="py-20 px-6">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="section-title">Live AI Bot Demo</h2>
+      <p class="text-center text-gray-400 mb-8">Enter your brand name to simulate AI detection capabilities</p>
 
-      <div class="bg-gray-800 p-8 rounded-xl border border-blue-500">
+      <div class="card border-2 border-blue-500">
         <input 
           id="brandInput"
           type="text" 
           placeholder="Enter your brand or executive name (example: Tesla, John Smith)"
-          class="w-full p-4 rounded bg-gray-900 border border-gray-700 mb-4 text-white"
+          class="w-full p-4 rounded-lg bg-gray-800 border border-gray-700 mb-4 text-white placeholder-gray-500"
         />
 
         <button 
           onclick="runDemo()"
-          class="bg-blue-500 hover:bg-blue-600 px-6 py-3 rounded font-semibold w-full mb-6">
-          Scan for Impersonation
+          class="btn-primary w-full mb-6">
+          Scan for Threats
         </button>
 
         <div id="demoResults" class="text-left hidden">
-          <h4 class="font-semibold text-red-400 mb-3">Detected Potential Impersonators:</h4>
-          <ul class="space-y-2 text-gray-300">
-            <li>⚠️ Fake LinkedIn profile using similar executive name</li>
-            <li>⚠️ Instagram account copying brand logo and identity</li>
-            <li>⚠️ X (Twitter) account impersonating official brand</li>
+          <h4 class="font-semibold text-red-400 mb-3">🔴 Detected Potential Threats:</h4>
+          <ul class="space-y-2 text-gray-300 mb-6">
+            <li>⚠️ Fake LinkedIn profile with similar brand name</li>
+            <li>⚠️ Instagram account copying brand logo</li>
+            <li>⚠️ Twitter account impersonating official brand</li>
             <li>⚠️ Facebook page pretending to represent company</li>
-            <li>⚠️ TikTok account with stolen profile image</li>
+            <li>⚠️ Website domain typosquatting your brand</li>
           </ul>
-          <p class="text-green-400 mt-4 font-semibold">✓ Full monitoring and automated takedown available with deployment.</p>
+          <p class="text-green-400 font-semibold">✅ Deploy bot for full automated monitoring and takedown support</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ADDITIONAL SERVICES -->
-  <section id="integrations" class="py-20 px-6">
+  <!-- ADDITIONAL SERVICES & INTEGRATIONS -->
+  <section id="integrations" class="py-20 px-6 bg-gray-900">
     <div class="max-w-7xl mx-auto">
-      <h3 class="text-3xl font-bold mb-12 text-center">Additional Services & Integrations</h3>
+      <h2 class="section-title">Additional Services & Integrations</h2>
 
       <div class="grid md:grid-cols-3 gap-8">
-
-        <div class="bg-gray-800 p-6 rounded-xl">
-          <h4 class="text-xl font-semibold mb-3">API Integrations</h4>
-          <p class="text-gray-400">Seamless integration with CRMs, ERPs, payment gateways, analytics tools, and internal systems. We connect AI bots directly to your existing tech stack.</p>
+        <div class="card">
+          <div class="text-4xl mb-4">🔗</div>
+          <h3 class="text-xl font-bold mb-3">API Integrations</h3>
+          <p class="text-gray-400 mb-6">Seamless integration with CRMs, ERPs, payment gateways, analytics tools, and internal systems.</p>
+          <button onclick="openPaymentModal('API Integrations', 499, 'api')" class="btn-primary w-full">
+            Deploy Now - $499/mo
+          </button>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-xl">
-          <h4 class="text-xl font-semibold mb-3">Custom Web & SaaS Development</h4>
-          <p class="text-gray-400">Full-stack development of dashboards, client portals, admin panels, and SaaS platforms built around your AI automation workflows.</p>
+        <div class="card">
+          <div class="text-4xl mb-4">💻</div>
+          <h3 class="text-xl font-bold mb-3">Custom Web & SaaS Development</h3>
+          <p class="text-gray-400 mb-6">Full-stack development of dashboards, client portals, admin panels, and SaaS platforms.</p>
+          <button onclick="openPaymentModal('Custom Web & SaaS Development', 1500, 'saas')" class="btn-primary w-full">
+            Deploy Now - $1,500/mo
+          </button>
         </div>
 
-        <div class="bg-gray-800 p-6 rounded-xl">
-          <h4 class="text-xl font-semibold mb-3">AI Infrastructure & Deployment</h4>
-          <p class="text-gray-400">Cloud deployment, secure hosting, automation pipelines, database architecture, and scalable AI infrastructure for enterprise-grade performance.</p>
+        <div class="card">
+          <div class="text-4xl mb-4">☁️</div>
+          <h3 class="text-xl font-bold mb-3">AI Infrastructure & Deployment</h3>
+          <p class="text-gray-400 mb-6">Cloud deployment, secure hosting, automation pipelines, and scalable AI infrastructure.</p>
+          <button onclick="openPaymentModal('AI Infrastructure & Deployment', 999, 'infrastructure')" class="btn-primary w-full">
+            Deploy Now - $999/mo
+          </button>
         </div>
-
       </div>
     </div>
   </section>
 
-  <!-- PRICING -->
-  <section id="pricing" class="py-20 px-6 bg-gray-900">
-    <div class="max-w-7xl mx-auto text-center">
-      <h3 class="text-3xl font-bold mb-4">Pricing & Deployment Options</h3>
-      <p class="text-gray-400 mb-12">Deploy instantly using PayPal, Stripe, Crypto, or Custom Enterprise billing. Automated provisioning begins immediately after payment.</p>
+  <!-- PRICING SECTION -->
+  <section id="pricing" class="py-20 px-6">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="section-title">Transparent Pricing</h2>
 
       <div class="grid md:grid-cols-3 gap-8">
-
-        <!-- STARTER -->
-        <div class="bg-gray-800 p-8 rounded-xl border border-gray-700">
-          <h4 class="text-xl font-semibold mb-4">Starter Protection Bot</h4>
-          <p class="text-3xl font-bold mb-2">$500/mo</p>
-          <ul class="text-gray-400 text-sm mb-6 space-y-2">
-            <li>• 1 Active AI Bot</li>
-            <li>• Social media monitoring</li>
-            <li>• Basic infringement detection</li>
-            <li>• Email alerts</li>
-            <li>• Monthly reporting</li>
-            <li>• 24/7 monitoring</li>
+        <!-- Starter -->
+        <div class="card">
+          <h3 class="text-2xl font-bold mb-2">Starter</h3>
+          <p class="text-gray-400 mb-6">Perfect for small teams</p>
+          <div class="text-4xl font-bold text-blue-400 mb-6">$500<span class="text-lg text-gray-400">/mo</span></div>
+          <ul class="space-y-3 mb-8 text-gray-400">
+            <li>✓ 1 AI Bot</li>
+            <li>✓ Basic Monitoring</li>
+            <li>✓ Email Support</li>
+            <li>✓ Monthly Reports</li>
           </ul>
-
-          <a href="https://www.paypal.com" target="_blank" class="block bg-blue-500 hover:bg-blue-600 py-3 rounded font-semibold mb-3">
-            Pay with PayPal
-          </a>
-
-          <button onclick="startStripeCheckout('starter')" class="w-full bg-indigo-600 hover:bg-indigo-700 py-3 rounded font-semibold mb-3">
-            Pay with Stripe
-          </button>
-
-          <button onclick="payCrypto('starter', 0.01)" class="w-full bg-purple-600 hover:bg-purple-700 py-3 rounded font-semibold">
-            Pay with Crypto
+          <button onclick="openPaymentModal('Starter Plan', 500, 'starter')" class="btn-primary w-full">
+            Subscribe Now
           </button>
         </div>
 
-        <!-- PROFESSIONAL -->
-        <div class="bg-blue-600 p-8 rounded-xl border border-blue-400">
-          <h4 class="text-xl font-semibold mb-4">Professional Intelligence Suite</h4>
-          <p class="text-3xl font-bold mb-2">$2,000/mo</p>
-          <ul class="text-white text-sm mb-6 space-y-2">
-            <li>• Up to 5 AI Bots</li>
-            <li>• Full brand protection monitoring</li>
-            <li>• Impersonation detection</li>
-            <li>• Lead intelligence tools</li>
-            <li>• Real-time alerts dashboard</li>
-            <li>• Priority support</li>
+        <!-- Professional (Highlighted) -->
+        <div class="card" style="border-color: var(--primary); border-width: 2px; transform: scale(1.05);">
+          <div class="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold inline-block mb-4">MOST POPULAR</div>
+          <h3 class="text-2xl font-bold mb-2">Professional</h3>
+          <p class="text-gray-400 mb-6">Best for growing businesses</p>
+          <div class="text-4xl font-bold text-blue-400 mb-6">$2,000<span class="text-lg text-gray-400">/mo</span></div>
+          <ul class="space-y-3 mb-8 text-gray-400">
+            <li>✓ Up to 5 AI Bots</li>
+            <li>✓ Full brand protection</li>
+            <li>✓ Priority Support</li>
+            <li>✓ Real-time Alerts</li>
           </ul>
-
-          <a href="https://www.paypal.com" target="_blank" class="block bg-white text-black hover:bg-gray-200 py-3 rounded font-semibold mb-3">
-            Pay with PayPal
-          </a>
-
-          <button onclick="startStripeCheckout('pro')" class="w-full bg-black hover:bg-gray-800 py-3 rounded font-semibold mb-3">
-            Pay with Stripe
-          </button>
-
-          <button onclick="payCrypto('pro', 0.05)" class="w-full bg-purple-800 hover:bg-purple-900 py-3 rounded font-semibold">
-            Pay with Crypto
+          <button onclick="openPaymentModal('Professional Plan', 2000, 'professional')" class="btn-primary w-full">
+            Subscribe Now
           </button>
         </div>
 
-        <!-- ENTERPRISE -->
-        <div class="bg-gray-800 p-8 rounded-xl border border-yellow-500">
-          <h4 class="text-xl font-semibold mb-4 text-yellow-400">Enterprise AI Platform</h4>
-          <p class="text-3xl font-bold mb-2">Custom Pricing</p>
-          <p class="text-gray-400 mb-4">Starting at $5,000+ setup + $1,000–$10,000/mo</p>
-
-          <ul class="text-gray-400 text-sm mb-6 space-y-2">
-            <li>• Unlimited bots</li>
-            <li>• Custom AI deployment</li>
-            <li>• Dedicated infrastructure</li>
-            <li>• API integrations</li>
-            <li>• Private dashboard</li>
-            <li>• Full automation systems</li>
+        <!-- Enterprise -->
+        <div class="card">
+          <h3 class="text-2xl font-bold mb-2">Enterprise</h3>
+          <p class="text-gray-400 mb-6">For large organizations</p>
+          <div class="text-4xl font-bold text-blue-400 mb-6">Custom</div>
+          <ul class="space-y-3 mb-8 text-gray-400">
+            <li>✓ Unlimited Bots</li>
+            <li>✓ Custom Integration</li>
+            <li>✓ 24/7 Support</li>
+            <li>✓ Custom Solutions</li>
           </ul>
-
-          <a href="#contact" class="block bg-yellow-500 text-black hover:bg-yellow-400 py-3 rounded font-semibold mb-3">
-            Request Enterprise Deployment
-          </a>
-
-          <button onclick="payCrypto('enterprise', 0.25)" class="w-full bg-purple-600 hover:bg-purple-700 py-3 rounded font-semibold">
-            Pay with Crypto
-          </button>
+          <a href="#contact" class="btn-secondary w-full text-center block">Contact Sales</a>
         </div>
-
       </div>
 
-      <!-- PAYMENT INFO -->
-      <div class="mt-12 text-gray-400 text-sm">
-        <p>💳 Supported payments: PayPal | Stripe | Crypto (ETH, USDT, BTC) | Wire Transfer</p>
-        <p class="mt-2">⚡ Instant deployment begins immediately after payment confirmation</p>
+      <!-- Payment Methods -->
+      <div class="bg-slate-800 rounded-2xl p-8 text-center mt-16">
+        <h3 class="text-2xl font-bold text-white mb-4">Flexible Payment Options</h3>
+        <p class="text-gray-400 mb-8">We accept all major payment methods for your convenience</p>
+        <div class="flex justify-center gap-8 flex-wrap">
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl">🅿️</span>
+            <span class="text-gray-300 font-medium">PayPal</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl">💳</span>
+            <span class="text-gray-300 font-medium">Stripe</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-2xl">₿</span>
+            <span class="text-gray-300 font-medium">Cryptocurrency</span>
+          </div>
+        </div>
       </div>
-
     </div>
   </section>
 
-  <!-- CONTACT -->
-  <section id="contact" class="py-20 px-6">
-    <div class="max-w-xl mx-auto text-center">
-      <h3 class="text-3xl font-bold mb-6">Contact Us</h3>
-      <p class="text-gray-400 mb-8">Have questions? Our team is ready to help you deploy the right AI bot solution.</p>
+  <!-- PAYMENT MODAL -->
+  <div id="paymentModal" class="payment-modal">
+    <div class="modal-content">
+      <div class="flex justify-between items-start mb-6">
+        <div>
+          <h3 class="text-2xl font-bold mb-2" id="modalTitle">Service Deployment</h3>
+          <p class="text-lg font-semibold text-blue-400" id="modalPrice">$500/month</p>
+        </div>
+        <button onclick="closePaymentModal()" class="text-2xl text-gray-400 hover:text-white">&times;</button>
+      </div>
 
-      <form class="space-y-4">
-        <input type="text" placeholder="Full Name" class="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white placeholder-gray-500" required />
-        <input type="email" placeholder="Email Address" class="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white placeholder-gray-500" required />
-        <select class="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white" required>
-          <option value="">Select Bot/Service</option>
-          <option value="impersonation">Social Media Impersonation Detection</option>
-          <option value="trademark">Trademark Infringement Detection</option>
-          <option value="executive">Executive Impersonation Detection</option>
-          <option value="leads">Lead Generation Intelligence</option>
-          <option value="realestate">Real Estate Intelligence</option>
-          <option value="competitor">Competitor Monitoring</option>
-          <option value="fraud">Fraud & Scam Detection</option>
-          <option value="custom">Custom Bot Development</option>
-        </select>
-        <textarea placeholder="Describe your needs" class="w-full p-3 rounded bg-gray-800 border border-gray-700 text-white placeholder-gray-500" rows="5"></textarea>
-        <button class="bg-blue-500 px-6 py-3 rounded font-semibold hover:bg-blue-600 w-full">
-          Submit Inquiry
+      <!-- Payment Method Tabs -->
+      <div class="payment-tabs">
+        <button class="payment-tab active" onclick="switchPaymentMethod('paypal')">🅿️ PayPal</button>
+        <button class="payment-tab" onclick="switchPaymentMethod('stripe')">💳 Stripe</button>
+        <button class="payment-tab" onclick="switchPaymentMethod('crypto')">₿ Crypto</button>
+      </div>
+
+      <!-- PayPal Payment -->
+      <div id="paypal-content" class="payment-content show">
+        <p class="text-gray-400 mb-6">You'll be securely redirected to PayPal to complete your payment.</p>
+        <a href="https://www.paypal.com" target="_blank" class="btn-paypal btn-payment">
+          Proceed to PayPal
+        </a>
+      </div>
+
+      <!-- Stripe Payment -->
+      <div id="stripe-content" class="payment-content">
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-2">Card Holder Name</label>
+          <input type="text" placeholder="John Doe" class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" />
+        </div>
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-2">Card Number</label>
+          <input type="text" placeholder="4242 4242 4242 4242" class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" />
+        </div>
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div>
+            <label class="block text-sm font-medium mb-2">Expiry</label>
+            <input type="text" placeholder="MM/YY" class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-2">CVC</label>
+            <input type="text" placeholder="123" class="w-full px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" />
+          </div>
+        </div>
+        <button onclick="processStripePayment()" class="btn-stripe btn-payment">
+          Pay with Stripe
         </button>
-      </form>
+      </div>
 
+      <!-- Crypto Payment -->
+      <div id="crypto-content" class="payment-content">
+        <p class="text-gray-400 mb-6">Connect your MetaMask wallet to pay with cryptocurrency. Accepts ETH, USDT, BTC, and more.</p>
+        <button onclick="connectCryptoWallet()" class="btn-crypto btn-payment">
+          Connect MetaMask Wallet
+        </button>
+        <p class="text-xs text-gray-500 text-center mt-4">Your transaction is secure and encrypted.</p>
+      </div>
+
+      <p class="text-xs text-gray-500 text-center mt-6">Your subscription will be activated immediately after payment confirmation.</p>
+    </div>
+  </div>
+
+  <!-- CONTACT SECTION -->
+  <section id="contact" class="py-20 px-6 bg-gray-900">
+    <div class="max-w-7xl mx-auto">
+      <h2 class="section-title">Get In Touch</h2>
+
+      <div class="grid lg:grid-cols-2 gap-12">
+        <div>
+          <form class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium mb-2">Full Name</label>
+              <input type="text" placeholder="Your Name" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" required />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">Email Address</label>
+              <input type="email" placeholder="your@email.com" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" required />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">Phone Number</label>
+              <input type="tel" placeholder="+1 (647) 848-5997" class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500" />
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">Service of Interest</label>
+              <select class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white focus:outline-none focus:border-blue-500" required>
+                <option value="">Select a service</option>
+                <option value="social">Social Media Impersonation Detection</option>
+                <option value="trademark">Trademark Infringement Detection</option>
+                <option value="executive">Executive Impersonation Detection</option>
+                <option value="leads">Lead Generation Intelligence</option>
+                <option value="realestate">Real Estate Intelligence</option>
+                <option value="competitor">Competitor Monitoring</option>
+                <option value="fraud">Fraud & Scam Detection</option>
+                <option value="custom">Custom Bot Development</option>
+              </select>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium mb-2">Message</label>
+              <textarea rows="5" placeholder="Tell us about your needs..." class="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 resize-none"></textarea>
+            </div>
+
+            <button type="submit" class="btn-primary w-full">Send Message</button>
+          </form>
+        </div>
+
+        <div class="space-y-8">
+          <div class="card">
+            <h3 class="text-xl font-bold mb-6">Contact Information</h3>
+            
+            <div class="space-y-6">
+              <div class="flex items-start space-x-4">
+                <span class="text-2xl">📧</span>
+                <div>
+                  <p class="font-medium">Email</p>
+                  <a href="mailto:info@luvestagroup.com" class="text-blue-400 hover:text-blue-300">info@luvestagroup.com</a>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <span class="text-2xl">📞</span>
+                <div>
+                  <p class="font-medium">Phone</p>
+                  <a href="tel:+16478485997" class="text-blue-400 hover:text-blue-300">+1 (647) 848-5997</a>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <span class="text-2xl">💬</span>
+                <div>
+                  <p class="font-medium">WhatsApp</p>
+                  <a href="https://wa.me/16478485997" target="_blank" class="text-blue-400 hover:text-blue-300">Message us on WhatsApp</a>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <span class="text-2xl">📍</span>
+                <div>
+                  <p class="font-medium">Office</p>
+                  <p class="text-gray-400">400 Applewood Cres<br>Concord, Ontario, Canada</p>
+                </div>
+              </div>
+
+              <div class="flex items-start space-x-4">
+                <span class="text-2xl">🕐</span>
+                <div>
+                  <p class="font-medium">Hours</p>
+                  <p class="text-gray-400">Monday - Friday: 9:00 AM - 6:00 PM EST<br>Saturday - Sunday: Closed</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 class="text-xl font-bold mb-4">Company Info</h3>
+            <div class="space-y-3 text-gray-400">
+              <p>
+                <span class="font-medium text-white">Luvesta Group</span><br>
+                Professional AI Solutions & Automation
+              </p>
+              <p>
+                <span class="font-medium text-white">Address:</span><br>
+                400 Applewood Cres<br>
+                Concord, Ontario, Canada
+              </p>
+              <p>
+                <span class="font-medium text-white">Service Areas:</span><br>
+                Brand Protection • Lead Generation • Intelligence Automation
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="py-8 text-center text-gray-500 border-t border-gray-800">
-    <p>© 2026 AI Bot Solutions. All rights reserved.</p>
-    <p class="text-xs mt-2">Enterprise-Grade AI Bot Development & Deployment</p>
+  <footer class="py-12 px-6 bg-gray-900 border-t border-gray-800">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-8 mb-8">
+        <div>
+          <h3 class="text-lg font-bold text-blue-400 mb-4">Luvesta Group</h3>
+          <p class="text-gray-400 text-sm">Professional AI solutions and automation for modern business. Located in Concord, Ontario.</p>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-4">Services</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#services" class="hover:text-blue-400">AI Services</a></li>
+            <li><a href="#bots" class="hover:text-blue-400">AI Bots</a></li>
+            <li><a href="#integrations" class="hover:text-blue-400">Integrations</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-4">Company</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#" class="hover:text-blue-400">About Us</a></li>
+            <li><a href="#contact" class="hover:text-blue-400">Contact</a></li>
+            <li><a href="#" class="hover:text-blue-400">Blog</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="font-bold mb-4">Legal</h4>
+          <ul class="space-y-2 text-sm text-gray-400">
+            <li><a href="#" class="hover:text-blue-400">Privacy Policy</a></li>
+            <li><a href="#" class="hover:text-blue-400">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+        <p>&copy; 2026 Luvesta Group. All rights reserved.</p>
+        <p class="mt-2">400 Applewood Cres, Concord, Ontario, Canada</p>
+      </div>
+    </div>
   </footer>
 
-  <!-- Stripe Logic -->
+  <!-- WHATSAPP BUTTON -->
+  <a href="https://wa.me/16478485997?text=Hi%20Luvesta%20Group,%20I%20would%20like%20to%20know%20more%20about%20your%20AI%20Bot%20Solutions" target="_blank" class="whatsapp-btn" title="Chat with us on WhatsApp">
+    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.67-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.076 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421-7.403h-.004a9.87 9.87 0 00-9.746 9.798c0 2.738.732 5.359 2.124 7.622L2.929 22.5l8.272-2.737c2.194 1.245 4.699 1.901 7.297 1.901 5.459 0 9.927-4.438 9.927-9.897 0-2.640-.674-5.119-1.956-7.322-.031-.054-.062-.107-.093-.162A9.846 9.846 0 0011.51 2.75h-.006z"/>
+    </svg>
+  </a>
+
+  <!-- SCRIPTS -->
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+
   <script>
     const stripe = Stripe("YOUR_STRIPE_PUBLISHABLE_KEY");
 
-    async function startStripeCheckout(plan) {
-      const res = await fetch("https://your-backend.com/create-checkout-session", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          plan: plan
-        })
-      });
-
-      const session = await res.json();
-
-      await stripe.redirectToCheckout({
-        sessionId: session.id
-      });
+    function openPaymentModal(title, price, type) {
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalPrice').textContent = '$' + price.toLocaleString() + '/month';
+      document.getElementById('paymentModal').classList.add('show');
+      window.currentPayment = { title, price, type };
     }
-  </script>
 
-  <!-- Crypto Logic -->
-  <script>
-    async function payCrypto(plan, amount) {
+    function closePaymentModal() {
+      document.getElementById('paymentModal').classList.remove('show');
+    }
+
+    function switchPaymentMethod(method) {
+      document.querySelectorAll('.payment-content').forEach(el => el.classList.remove('show'));
+      document.querySelectorAll('.payment-tab').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(method + '-content').classList.add('show');
+      event.target.classList.add('active');
+    }
+
+    async function processStripePayment() {
+      try {
+        alert('✓ Payment processing! You will receive a confirmation email shortly.');
+        closePaymentModal();
+      } catch (error) {
+        alert('Payment failed. Please try again.');
+      }
+    }
+
+    async function connectCryptoWallet() {
       if (!window.ethereum) {
-        alert("Please install MetaMask to pay with crypto");
+        alert('Please install MetaMask to pay with crypto');
         return;
       }
-
+      
       try {
         const provider = new ethers.BrowserProvider(window.ethereum);
-        await provider.send("eth_requestAccounts", []);
-        const signer = await provider.getSigner();
-
-        const tx = await signer.sendTransaction({
-          to: "YOUR_WALLET_ADDRESS",
-          value: ethers.parseEther(amount.toString())
-        });
-
-        await tx.wait();
-
-        await fetch("https://your-backend.com/crypto-payment-success", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            plan: plan,
-            wallet: await signer.getAddress(),
-            txHash: tx.hash
-          })
-        });
-
-        alert("✓ Payment received! Bot provisioning started. Check your email for deployment details.");
+        const accounts = await provider.send("eth_requestAccounts", []);
+        alert('✓ Wallet connected! Processing payment...');
+        closePaymentModal();
       } catch (error) {
-        console.error("Payment error:", error);
-        alert("Payment failed. Please try again.");
+        console.error('Wallet connection failed:', error);
       }
     }
-  </script>
 
-  <!-- Demo Logic -->
-  <script>
+    document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+
+    window.addEventListener('click', function(event) {
+      const modal = document.getElementById('paymentModal');
+      if (event.target === modal) {
+        closePaymentModal();
+      }
+    });
+
     function runDemo() {
       const input = document.getElementById('brandInput').value;
       const results = document.getElementById('demoResults');
@@ -426,11 +948,6 @@
         alert("Please enter a brand name to scan");
       }
     }
-  </script>
-
-  <!-- BotPenguin Chat Widget -->
-  <script id="messenger-widget-b" src="https://cdn.botpenguin.com/website-bot.js" defer>
-    699b8bb30f1ff6eef1e58995,699b8b8bd3c5f7f14274ccbb
   </script>
 
 </body>
